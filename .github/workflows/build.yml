@@ -19,25 +19,28 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+
+      - name: Accept Android Licenses
+        run: yes | flutter doctor --android-licenses || true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
       - name: Install Flet
         run: |
           python -m pip install --upgrade pip
           pip install flet
 
-      - name: Build Flet APK
-        run: flet build apk
+      - name: Build APK (Verbose Mode)
+        run: flet build apk -v
 
-      - name: Upload APK Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: NICU_Smart_Bill_APK
